@@ -2,16 +2,31 @@ package LLCached
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"strings"
+	"sync"
+
+	"github.com/cexll/LLCached/consistenthash"
 )
 
-const defaultBasePath = "/_LLCached/"
+const (
+	defaultBasePath = "/_LLCached/"
+	defaultReplicas = 50
+)
 
 type HTTPPool struct {
 	self     string
 	basePath string
+	mu       sync.Mutex
+	peers    *consistenthash.Map
+	httpLLs  map[string]*httpLL
+}
+
+type httpLL struct {
+	baseURL string
 }
 
 func NewHTTPPool(self string) *HTTPPool {
@@ -24,6 +39,33 @@ func NewHTTPPool(self string) *HTTPPool {
 func (p *HTTPPool) Log(format string, v ...interface{}) {
 	log.Printf("[Server %s] %s", p.self, fmt.Sprintf(format, v...))
 }
+
+func (h *httpLL) Get(group string, key string) ([]byte, error) {
+	u := fmt.Sprintf(
+		"%v%v/%v",
+		h.baseURL,
+		url.QueryEscape(group),
+		url.QueryEscape(key),
+	)
+	res, err := http.Get(u)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("server returned: %v", res.Status)
+	}
+
+	bytes, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, fmt.Errorf("reading response body: %v", err)
+	}
+
+	return bytes, nil
+}
+
+var _ PeerLL = (*httpLL)(nil)
 
 func (p *HTTPPool) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if !strings.HasPrefix(r.URL.Path, p.basePath) {
