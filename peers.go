@@ -2,6 +2,7 @@ package LLCached
 
 import (
 	"github.com/cexll/LLCached/consistenthash"
+	pb "github.com/cexll/LLCached/llcachepb"
 )
 
 type PeerPicker interface {
@@ -9,7 +10,7 @@ type PeerPicker interface {
 }
 
 type PeerLL interface {
-	Get(group string, key string) ([]byte, error)
+	Get(in *pb.Request, out *pb.Response) error
 }
 
 func (p *HTTPPool) Set(peers ...string) {
