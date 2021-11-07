@@ -14,7 +14,7 @@ func (d String) Len() int {
 func TestGet(t *testing.T) {
 	lru := New(int64(0), nil)
 	lru.Add("key1", String("1234"))
-	if v,ok := lru.Get("key1"); !ok || string(v.(String)) != "1234" {
+	if v, ok := lru.Get("key1"); !ok || string(v.(String)) != "1234" {
 		t.Fatalf("cache hit key1=1234 failed")
 	}
 
@@ -40,7 +40,7 @@ func TestRemoveoldest(t *testing.T) {
 
 func TestOnEvicted(t *testing.T) {
 	keys := make([]string, 0)
-	callback := func (key string, value Value)  {
+	callback := func(key string, value Value) {
 		keys = append(keys, key)
 	}
 	lru := New(int64(10), callback)

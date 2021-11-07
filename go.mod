@@ -1,3 +1,3 @@
-module github.com/cexll/cached
+module github.com/cexll/LLCached
 
 go 1.16
