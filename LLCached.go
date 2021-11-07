@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"sync"
+
+	"github.com/cexll/LLCached/singleflight"
 )
 
 type LL interface {
@@ -15,6 +17,7 @@ type Group struct {
 	ll        LL
 	mainCache cache
 	peers     PeerPicker
+	loader    *singleflight.Group
 }
 
 func (f LLFunc) Get(key string) ([]byte, error) {
@@ -41,16 +44,22 @@ func (g *Group) Get(key string) (ByteView, error) {
 }
 
 func (g *Group) load(key string) (value ByteView, err error) {
-	if g.peers != nil {
-		if peer, ok := g.peers.PickPeer(key); ok {
-			if value, err = g.getFromPeer(peer, key); err == nil {
-				return value, nil
+	viewi, err := g.loader.Do(key, func() (interface{}, error) {
+		if g.peers != nil {
+			if peer, ok := g.peers.PickPeer(key); ok {
+				if value, err = g.getFromPeer(peer, key); err == nil {
+					return value, nil
+				}
+				log.Println("[LLCached] Failed to get from peer", err)
 			}
-			log.Println("[LLCached] Failed to get from peer", err)
 		}
-	}
+		return g.getLocally(key)
+	})
 
-	return g.getLocally(key)
+	if err == nil {
+		return viewi.(ByteView), nil
+	}
+	return
 }
 
 func (g *Group) getLocally(key string) (ByteView, error) {
@@ -77,6 +86,7 @@ func NewGroup(name string, cacheBytes int64, ll LL) *Group {
 		name:      name,
 		ll:        ll,
 		mainCache: cache{cacheBytes: cacheBytes},
+		loader:    &singleflight.Group{},
 	}
 	groups[name] = g
 	return g
