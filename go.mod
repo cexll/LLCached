@@ -1,4 +1,4 @@
-module github.com/cexll/LLCached
+module github.com/cexll/llcache
 
 go 1.16
 

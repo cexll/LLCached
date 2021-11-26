@@ -1,12 +1,12 @@
-package LLCached
+package llcache
 
 import (
 	"fmt"
 	"log"
 	"sync"
 
-	pb "github.com/cexll/LLCached/llcachepb"
-	"github.com/cexll/LLCached/singleflight"
+	pb "github.com/cexll/llcache/llcachepb"
+	"github.com/cexll/llcache/singleflight"
 )
 
 type LL interface {
@@ -51,7 +51,7 @@ func (g *Group) load(key string) (value ByteView, err error) {
 				if value, err = g.getFromPeer(peer, key); err == nil {
 					return value, nil
 				}
-				log.Println("[LLCached] Failed to get from peer", err)
+				log.Println("[llcache] Failed to get from peer", err)
 			}
 		}
 		return g.getLocally(key)

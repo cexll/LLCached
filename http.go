@@ -1,4 +1,4 @@
-package LLCached
+package llcache
 
 import (
 	"fmt"
@@ -9,13 +9,13 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/cexll/LLCached/consistenthash"
-	pb "github.com/cexll/LLCached/llcachepb"
+	"github.com/cexll/llcache/consistenthash"
+	pb "github.com/cexll/llcache/llcachepb"
 	"github.com/golang/protobuf/proto"
 )
 
 const (
-	defaultBasePath = "/_LLCached/"
+	defaultBasePath = "/_llcache/"
 	defaultReplicas = 50
 )
 

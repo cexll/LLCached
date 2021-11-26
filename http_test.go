@@ -1,4 +1,4 @@
-package LLCached
+package llcache
 
 import (
 	"fmt"

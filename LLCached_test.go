@@ -1,4 +1,4 @@
-package LLCached
+package llcache
 
 import (
 	"flag"
@@ -57,7 +57,7 @@ func startCacheServer(addr string, addrs []string, g *Group) {
 	peers := NewHTTPPool(addr)
 	peers.Set(addrs...)
 	g.RegisterPeers(peers)
-	log.Println("LLCached is running at", addr)
+	log.Println("llcache is running at", addr)
 	log.Fatal(http.ListenAndServe(addr[7:], peers))
 }
 
@@ -80,7 +80,7 @@ func startAPIServer(apiAddr string, g *Group) {
 func TestMain(t *testing.T) {
 	var port int
 	var api bool
-	flag.IntVar(&port, "port", 8001, "LLCached server port")
+	flag.IntVar(&port, "port", 8001, "llcache server port")
 	flag.BoolVar(&api, "api", false, "Start a api server")
 	flag.Parse()
 

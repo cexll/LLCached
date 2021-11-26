@@ -1,8 +1,8 @@
-package LLCached
+package llcache
 
 import (
-	"github.com/cexll/LLCached/consistenthash"
-	pb "github.com/cexll/LLCached/llcachepb"
+	"github.com/cexll/llcache/consistenthash"
+	pb "github.com/cexll/llcache/llcachepb"
 )
 
 type PeerPicker interface {

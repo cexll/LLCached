@@ -1,9 +1,9 @@
-package LLCached
+package llcache
 
 import (
 	"sync"
 
-	"github.com/cexll/LLCached/lru"
+	"github.com/cexll/llcache/lru"
 )
 
 type cache struct {
