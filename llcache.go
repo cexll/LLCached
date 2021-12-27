@@ -5,8 +5,8 @@ import (
 	"log"
 	"sync"
 
-	pb "github.com/cexll/llcache/llcachepb"
-	"github.com/cexll/llcache/singleflight"
+	pb "github.com/go-ll/llcache/llcachepb"
+	"github.com/go-ll/llcache/singleflight"
 )
 
 type LL interface {

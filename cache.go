@@ -3,7 +3,7 @@ package llcache
 import (
 	"sync"
 
-	"github.com/cexll/llcache/lru"
+	"github.com/go-ll/llcache/lru"
 )
 
 type cache struct {

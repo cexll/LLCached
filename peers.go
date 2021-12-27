@@ -1,8 +1,8 @@
 package llcache
 
 import (
-	"github.com/cexll/llcache/consistenthash"
-	pb "github.com/cexll/llcache/llcachepb"
+	"github.com/go-ll/llcache/consistenthash"
+	pb "github.com/go-ll/llcache/llcachepb"
 )
 
 type PeerPicker interface {

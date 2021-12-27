@@ -9,8 +9,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/cexll/llcache/consistenthash"
-	pb "github.com/cexll/llcache/llcachepb"
+	"github.com/go-ll/llcache/consistenthash"
+	pb "github.com/go-ll/llcache/llcachepb"
 	"github.com/golang/protobuf/proto"
 )
 
